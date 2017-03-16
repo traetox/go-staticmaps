@@ -88,7 +88,13 @@ func (t *TileFetcher) Fetch(zoom, x, y int) (image.Image, error) {
 }
 
 func (t *TileFetcher) download(url string) ([]byte, error) {
-	resp, err := http.Get(url)
+	clnt := http.Client{}
+	req, err := http.NewRequest(http.MethodGet, url, nil)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set(`User-Agent`, `"Mozilla/5.0 (Windows NT 6.1; WOW64; rv:35.0) Gecko/20100101 Firefox/35.0"`)
+	resp, err := clnt.Do(req)
 	if err != nil {
 		return nil, err
 	}
